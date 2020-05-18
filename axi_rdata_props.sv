@@ -1,68 +1,70 @@
 interface axic_rdata
-  #(
-    parameter integer maxwait = 5
-  )
-  (
-    input wire AXI_ACLK,
-    input wire AXI_ARESETN,
-    input wire AXI_RDATA,
-    input wire AXI_RVALID,
-    input wire AXI_RREADY
-  );
+	#(
+		parameter integer maxwait = 5,
+		parameter integer C_AXI_DATA_WIDTH = 32,
+		parameter integer C_AXI_ADDR_WIDTH = 8
+	)
+	(
+		input wire AXI_ACLK,
+		input wire AXI_ARESETN,
+		input wire[C_AXI_DATA_WIDTH-1:0] AXI_RDATA,
+		input wire AXI_RVALID,
+		input wire AXI_RREADY
+	);
 
-  property AXI4_ERRS_RDATA_STABLE;
-    @(posedge AXI_ACLK)
-      AXI_ARESETN & AXI_RVALID & !AXI_RREADY & !$isunknown({AXI_RVALID, AXI_RREADY})
-      ##1 AXI_ARESETN
-      |-> $stable(AXI_RDATA);
-  endproperty
-  AXI4_ERRS_RDATA_STABLE_inst: assert property (AXI4_ERRS_RDATA_STABLE);
+	property AXI4_ERRS_RDATA_STABLE;
+		@(posedge AXI_ACLK)
+			AXI_ARESETN & AXI_RVALID & !AXI_RREADY & !$isunknown({AXI_RVALID, AXI_RREADY})
+			##1 AXI_ARESETN
+			|-> $stable(AXI_RDATA);
+	endproperty
+	AXI4_ERRS_RDATA_STABLE_inst: assert property (AXI4_ERRS_RDATA_STABLE);
 
-  property AXI4_ERRS_RDATA_X;
-    @(posedge AXI_ACLK)
-      AXI_ARESETN & AXI_RVALID
-      |-> !$isunknown(AXI_RDATA);
-  endproperty
-  AXI4_ERRS_RDATA_X_inst: assert property (AXI4_ERRS_RDATA_X);
-
-
-  property AXI4_ERRS_RVALID_RESET;
-    @(posedge AXI_ACLK)
-      !AXI_ARESETN
-      ##1 AXI_ARESETN
-      |-> !AXI_RVALID;
-  endproperty
-  AXI4_ERRS_RVALID_RESET_inst: assert property (AXI4_ERRS_RVALID_RESET);
-
-  property AXI4_ERRS_RVALID_STABLE;
-    @(posedge AXI_ACLK)
-      AXI_ARESETN & AXI_RVALID & !AXI_RREADY & !$isunknown({AXI_RVALID, AXI_RREADY})
-      ##1 AXI_ARESETN
-      |-> AXI_RVALID;
-  endproperty
-  AXI4_ERRS_RVALID_STABLE_inst: assert property (AXI4_ERRS_RVALID_STABLE);
+	property AXI4_ERRS_RDATA_X;
+		@(posedge AXI_ACLK)
+			AXI_ARESETN & AXI_RVALID
+			|-> !$isunknown(AXI_RDATA);
+	endproperty
+	AXI4_ERRS_RDATA_X_inst: assert property (AXI4_ERRS_RDATA_X);
 
 
-  property AXI4_ERRS_RVALID_X;
-    @(posedge AXI_ACLK)
-      AXI_ARESETN
-      |-> !$isunknown({AXI_RVALID});
-  endproperty
-  AXI4_ERRS_RVALID_X_inst: assert property (AXI4_ERRS_RVALID_X);
+	property AXI4_ERRS_RVALID_RESET;
+		@(posedge AXI_ACLK)
+			!AXI_ARESETN
+			##1 AXI_ARESETN
+			|-> !AXI_RVALID;
+	endproperty
+	AXI4_ERRS_RVALID_RESET_inst: assert property (AXI4_ERRS_RVALID_RESET);
 
-  property AXI4_ERRM_RREADY_X;
-    @(posedge AXI_ACLK)
-      AXI_ARESETN
-      |-> !$isunknown({AXI_RREADY});
-  endproperty
-  AXI4_ERRM_RREADY_X_inst: assert property (AXI4_ERRM_RREADY_X);
+	property AXI4_ERRS_RVALID_STABLE;
+		@(posedge AXI_ACLK)
+			AXI_ARESETN & AXI_RVALID & !AXI_RREADY & !$isunknown({AXI_RVALID, AXI_RREADY})
+			##1 AXI_ARESETN
+			|-> AXI_RVALID;
+	endproperty
+	AXI4_ERRS_RVALID_STABLE_inst: assert property (AXI4_ERRS_RVALID_STABLE);
 
 
-  property AXI4_RECM_RREADY_MAX_WAIT;
-    @(posedge AXI_ACLK)
-      AXI_ARESETN & AXI_RVALID & !AXI_RREADY & !$isunknown({AXI_RVALID, AXI_RREADY})
-      |-> ##[1:maxwait] AXI_RREADY;
-  endproperty
-  AXI4_RECM_RREADY_MAX_WAIT_inst: assert property (AXI4_RECM_RREADY_MAX_WAIT);
+	property AXI4_ERRS_RVALID_X;
+		@(posedge AXI_ACLK)
+			AXI_ARESETN
+			|-> !$isunknown({AXI_RVALID});
+	endproperty
+	AXI4_ERRS_RVALID_X_inst: assert property (AXI4_ERRS_RVALID_X);
+
+	property AXI4_ERRM_RREADY_X;
+		@(posedge AXI_ACLK)
+			AXI_ARESETN
+			|-> !$isunknown({AXI_RREADY});
+	endproperty
+	AXI4_ERRM_RREADY_X_inst: assert property (AXI4_ERRM_RREADY_X);
+
+
+	property AXI4_RECM_RREADY_MAX_WAIT;
+		@(posedge AXI_ACLK)
+			AXI_ARESETN & AXI_RVALID & !AXI_RREADY & !$isunknown({AXI_RVALID, AXI_RREADY})
+			|-> ##[1:maxwait] AXI_RREADY;
+	endproperty
+	AXI4_RECM_RREADY_MAX_WAIT_inst: assert property (AXI4_RECM_RREADY_MAX_WAIT);
 
 endinterface: axic_rdata
